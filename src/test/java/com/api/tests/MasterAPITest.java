@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import com.api.constant.Role;
 import com.api.utils.AuthTokenProvider;
 import com.api.utils.ConfigManager;
+import com.api.utils.SpecUtils;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
 
@@ -17,17 +18,11 @@ public class MasterAPITest {
 	public void masterAPITest() {
 		
 		given()
-		.baseUri(ConfigManager.getProperty("BASE_URI"))
-		.and()
-		.header("Authorization",AuthTokenProvider.getToken(Role.FD))
-		.contentType("")// Hence we need to pass content type explicitly for Post
-		.log().all()
+		.spec(SpecUtils.requestSpecWithAuth(Role.FD))
 		.when()
 		.post("master")// default Content-Type=application/x-www-form-urlencoded
 		.then()
-		.log().all()
-		.statusCode(200)
-		.time(Matchers.lessThan(1000l))
+		.spec(SpecUtils.responseSpec_OK())
 		.body("message", Matchers.equalTo("Success"))
 		.body("data",Matchers.notNullValue())
 		.body("data", Matchers.hasKey("mst_model"))
