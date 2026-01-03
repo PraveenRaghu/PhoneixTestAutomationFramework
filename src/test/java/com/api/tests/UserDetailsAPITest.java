@@ -6,6 +6,8 @@ import static io.restassured.RestAssured.given;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
+import com.api.utils.SpecUtils;
+
 import static com.api.constant.Role.*;
 
 import static com.api.utils.AuthTokenProvider.*;
@@ -19,23 +21,15 @@ public class UserDetailsAPITest {
 	@Test
 	public void userDetailsAPITest() {
 		
-		Header authHeader = new Header("Authorization",getToken(FD));
+		
 		
 		given()
-			.baseUri(getProperty("BASE_URI"))
-		.and()
-			.header(authHeader)
-			.accept(ContentType.JSON)
-			.log().uri()
-			.log().headers()
-			.log().method()
+			.spec(SpecUtils.requestSpecWithAuth(FD))
 			
 		.when()
 			.get("userdetails")
 		.then()
-			.log().all()
-			.statusCode(200)
-			.time(Matchers.lessThan(1000L))
+			.spec(SpecUtils.responseSpec_OK())
 		.and()
 			.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/userDetailsAPIResponseSchema.json"));	}
 
