@@ -1,5 +1,10 @@
 package com.api.tests;
 
+import static io.restassured.RestAssured.given;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
@@ -9,18 +14,10 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
-import com.api.utils.AuthTokenProvider;
-import com.api.utils.ConfigManager;
+import static com.api.utils.DateTimeUtil.*;
 import com.api.utils.SpecUtils;
-import com.github.fge.jsonschema.main.JsonValidator;
 
-import io.restassured.http.ContentType;
 import io.restassured.module.jsv.JsonSchemaValidator;
-
-import static io.restassured.RestAssured.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CreateJobAPITest {
 	
@@ -31,7 +28,7 @@ public class CreateJobAPITest {
 	public void createJobAPITest() {
 		Customer customer = new Customer("Praven", "R","8085536329", "", "praveen.raghu.raghu@gmail.com", "");
 		CustomerAddress customerAddress = new CustomerAddress("980", "Peace", "Street1","Ganesh Mandir", "Limbodi","452020", "India", "M.P");
-		CustomerProduct customerProduct = new CustomerProduct("2025-04-06T18:30:00.000Z","29002151778092", "29002151778092", "29002151778092", "2025-04-06T18:30:00.000Z", 1, 1);
+		CustomerProduct customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"69002151778092", "69002151778092", "69002151778092", getTimeWithDaysAgo(10), 1, 1);
 		Problems problems = new Problems(1, "Battery Issue");
 		List<Problems> problemList = new ArrayList<Problems>();
 		problemList.add(problems);
