@@ -95,5 +95,11 @@ public class SpecUtils {
 			.build();
 		    return responseSpecification;
 		}
+	public static ResponseSpecification responseSpec_TEXT(int statusCode) {
+		ResponseSpecification responseSpecification = new ResponseSpecBuilder().expectStatusCode(statusCode)
+				.expectResponseTime(Matchers.lessThan(1000L)).build();
+
+		return responseSpecification;
+	}
 
 }
