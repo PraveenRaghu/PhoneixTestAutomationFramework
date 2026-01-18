@@ -38,8 +38,8 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4.6.2
       with:
-        name: Surefire Report
-        path: target/surefire-reports
+        name: SureFire Report
+        path: target/surefire-reports/
         retention-days: 10
         
 
