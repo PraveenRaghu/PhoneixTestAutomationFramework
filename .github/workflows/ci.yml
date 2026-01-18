@@ -31,8 +31,14 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+
+    - name: Default value for execution
+      id: default
+      run: |
+            echo "env=${{ github.event.inputs.env || 'qa'}}" >> $GITHUB_OUTPUT 
+      
     - name: Execute Test Automation Framework
-      run: mvn clean test -DsuiteXMLFile=testng.xml -Denv="${{github.event.inputs.env}}"
+      run: mvn clean test -DsuiteXMLFile=testng.xml -Denv="${{steps.default.outputs.env}}"
 
     - name: Upload a Build Artifact
       if: always()
