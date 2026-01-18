@@ -1,42 +1,41 @@
 package com.api.tests;
 
+import static com.api.constant.Role.FD;
 import static io.restassured.RestAssured.given;
 
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-import static com.api.constant.Role .*;
-import com.api.utils.ConfigManager;
-import com.api.utils.SpecUtils;
+import static com.api.utils.SpecUtils.*;
 
-import io.restassured.module.jsv.JsonSchemaValidator;
+import static io.restassured.module.jsv.JsonSchemaValidator.*;
 
 public class CountAPITest {
-	@Test
+	@Test(description="Verifing Count api giving correct response", groups= {"api","regression", "smoke"})
 	public void verifyCountAPIResponse() {
 		
 		given()
-		.spec(SpecUtils.requestSpecWithAuth(FD))
+		.spec(requestSpecWithAuth(FD))
 		.when()
 		.get("/dashboard/count")
 		.then()
-		.spec(SpecUtils.responseSpec_OK())
+		.spec(responseSpec_OK())
 		.body("message",Matchers.equalTo("Success"))
 		.body("data", Matchers.notNullValue())
 		.body("data.size()", Matchers.equalTo(3))
 		.body("data.count", Matchers.everyItem(Matchers.greaterThanOrEqualTo(0)))
 		.body("data.label", Matchers.everyItem(Matchers.not(Matchers.blankOrNullString())))
 		.body("data.key",Matchers.containsInAnyOrder("pending_fst_assignment","pending_for_delivery","created_today"))
-		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/CountAPIReposeSchema-FD.json"));
+		.body(matchesJsonSchemaInClasspath("response-schema/CountAPIReposeSchema-FD.json"));
 	}
-	@Test
+	@Test(description="Verifing count api giving correct response when token is missing", groups= {"api","regression", "smoke"})
 	public void verifyCountAPIMissingToken() {
 		given()
-		.spec(SpecUtils.requestSpec())
+		.spec(requestSpec())
 		.when()
 		.get("/dashboard/count")
 		.then()
-		.spec(SpecUtils.responseSpec(401));
+		.spec(responseSpec(401));
 		
 	}
 
