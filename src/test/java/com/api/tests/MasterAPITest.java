@@ -38,7 +38,7 @@ public class MasterAPITest {
 		.when()
 		.post("master")// default Content-Type=application/x-www-form-urlencoded
 		.then()
-		.spec(responseSpec(401));
+		.spec(responseSpec_TEXT(401));
 	}
 
 }
