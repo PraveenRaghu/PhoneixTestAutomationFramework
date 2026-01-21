@@ -13,7 +13,7 @@ import com.opencsv.exceptions.CsvException;
 public class ReadCSVFile {
 
 	public static void main(String[] args) throws IOException, CsvException {
-		
+		// Data reading from Csv file
 		InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream("testdata/LoginCreds.csv");
 		InputStreamReader isr = new InputStreamReader(is);
 		
