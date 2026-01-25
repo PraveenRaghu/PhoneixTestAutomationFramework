@@ -1,10 +1,8 @@
 package com.api.utils;
 
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
 import com.api.constant.Role;
-import com.api.request.model.UserCredentials;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
