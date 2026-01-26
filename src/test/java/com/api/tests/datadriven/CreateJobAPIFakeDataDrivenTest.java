@@ -29,7 +29,7 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class CreateJobAPIFakeDataDrivenTest {
 
-	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "smoke"},
+	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "datadriven","faker"},
 	      dataProviderClass =com.dataproviders.DataProviderUtils.class,
 	      dataProvider= "CreateJobAPIFakerAPIDataProvider"
 			)
