@@ -1,4 +1,4 @@
-package com.api.tests.datadriven;
+package com.api.tests;
 
 import static io.restassured.RestAssured.given;
 
@@ -22,18 +22,26 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
+import com.api.utils.FakerDataGenerator;
+
 import static com.api.utils.DateTimeUtil.*;
 import static com.api.utils.SpecUtils.*;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
 
-public class CreateJobAPIDataDrivenTest {
-
-	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "datadriven","csv"},
-	      dataProviderClass =com.dataproviders.DataProviderUtils.class,
-	      dataProvider= "CreateJobAPIDataprovider"
-			)
-	public void createJobAPITest(CreateJobPayload createJobPayload) {
+public class CreateJobAPITest2 {
+	private CreateJobPayload createJobPayload;
+	
+	@BeforeMethod(description="Creating createapi requestpayload")
+	public void setup() {
+		
+		
+		 createJobPayload = FakerDataGenerator.generateFakeCreateJobData();
+	}
+	
+	
+	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "smoke"})
+	public void createJobAPITest() {
 		
 		given()
 		.spec(requestSpecWithAuth(Role.FD, createJobPayload))
