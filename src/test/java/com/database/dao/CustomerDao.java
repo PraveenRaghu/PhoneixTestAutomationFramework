@@ -1,9 +1,8 @@
 package com.database.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.database.DataBaseManager;
 import com.database.model.CustomerDBModel;
@@ -12,25 +11,36 @@ public class CustomerDao {
 	
 	
 	public static final String CUSTOMER_DETAIL_QUERY ="""
-			select * from tr_customer tc where id= 188668
+			select * from tr_customer tc where id= ?
 			""";
-	
-	public static CustomerDBModel getCustomerInfo() throws SQLException {
+	private CustomerDao() {
 		
+	}
+	public static CustomerDBModel getCustomerInfo(int customerID)  {
+		CustomerDBModel customerDBModel = null;
+		try {
 	Connection connection=	DataBaseManager.getConnection();
-	Statement statment=connection.createStatement();
-	ResultSet resultSet=statment.executeQuery(CUSTOMER_DETAIL_QUERY);
-	CustomerDBModel customerDBModel = null;
+	PreparedStatement preparedStatment=connection.prepareStatement(CUSTOMER_DETAIL_QUERY);
+	preparedStatment.setInt(1, customerID);
+	ResultSet resultSet=preparedStatment.executeQuery();
+	
 	
 	while(resultSet.next()) {
 		System.out.println(resultSet.getString("first_name")); 
 		System.out.println(resultSet.getString("email_id")); 
 		
-		 customerDBModel = new CustomerDBModel(resultSet.getString("first_name"),
+		 customerDBModel = new CustomerDBModel(
+				 resultSet.getInt("id"),
+				 resultSet.getString("first_name"),
 				resultSet.getString("last_name"), resultSet.getString("mobile_number"), 
 				resultSet.getString("mobile_number_alt"), resultSet.getString("email_id"), 
-				resultSet.getString("email_id_alt"));
+				resultSet.getString("email_id_alt"),
+				 resultSet.getInt("tr_customer_address_id"));
 	}
+		}
+		catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	
 	return customerDBModel;
 		
