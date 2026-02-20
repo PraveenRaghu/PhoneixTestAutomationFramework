@@ -26,6 +26,7 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
+import com.api.response.model.CreateJobResponseModel;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
@@ -36,7 +37,7 @@ import com.database.model.CustomerProductDBModel;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 
-public class CreateJobAPIWithDBValidationTest {
+public class CreateJobAPIWithDBValidationTest2 {
 	private CreateJobPayload createJobPayload;
 	private Customer customer;
 	private CustomerAddress customerAddress;
@@ -46,7 +47,7 @@ public class CreateJobAPIWithDBValidationTest {
 	public void setup() {
 		customer = new Customer("Praven", "R","8085536329", "", "praveen.raghu.raghu@gmail.com", "");
 		customerAddress = new CustomerAddress("980", "Peace", "Street1","Ganesh Mandir", "Limbodi","452020", "India", "M.P");
-		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"48992151778042", "48992151778042", "48992151778042", getTimeWithDaysAgo(10), 
+	customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"89999151778042", "89999151778042", "89999151778042", getTimeWithDaysAgo(10), 
 				Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
 		Problems problems = new Problems(Problem.SMARTPHONE_IS_RUNNING_SLOW.getCode(), "Battery Issue");
 		List<Problems> problemList = new ArrayList<Problems>();
@@ -59,7 +60,7 @@ public class CreateJobAPIWithDBValidationTest {
 	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "smoke"})
 	public void createJobAPITest() {
 		
-Response response =	given()
+CreateJobResponseModel createJobResponseModel =	given()
 		.spec(requestSpecWithAuth(Role.FD, createJobPayload))
 		.when()
 		.post("/job/create")
@@ -68,8 +69,10 @@ Response response =	given()
 		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/CreateAPIresponseSchema.json"))
 		.body("message", Matchers.equalTo("Job created successfully. "))
 		.body("data.mst_service_location_id", Matchers.equalTo(1))
-		.body("data.job_number", Matchers.startsWith("JOB_")).extract().response();
-		int customerID= response.then().extract().body().jsonPath().getInt("data.tr_customer_id");
+		.body("data.job_number", Matchers.startsWith("JOB_"))
+		.extract().as(CreateJobResponseModel.class);
+		
+		int customerID= createJobResponseModel.getData().getTr_customer_id();
 	    System.out.println(customerID);
 	    CustomerDBModel customerDataFromDB=  CustomerDao.getCustomerInfo(customerID);
 	    System.out.println(customerDataFromDB);
@@ -91,7 +94,7 @@ Response response =	given()
 	    Assert.assertEquals(customerAddressFromDB.getCountry(), customerAddress.country());
 	    Assert.assertEquals(customerAddressFromDB.getState(), customerAddress.state());
 	    
-	    int productID= response.then().extract().body().jsonPath().getInt("data.tr_customer_product_id");
+	    int productID= createJobResponseModel.getData().getTr_customer_product_id();
 	    CustomerProductDBModel customerProductDBData = CustomerProductDao.getProductInfoFromDB(productID);
 	    Assert.assertEquals(customerProductDBData.getImei1(), customerProduct.imei1());
 	    Assert.assertEquals(customerProductDBData.getImei2(), customerProduct.imei2());
