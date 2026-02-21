@@ -29,9 +29,11 @@ import com.api.request.model.Problems;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
+import com.database.dao.MapJobProblemDao;
 import com.database.model.CustomerAddressDBModel;
 import com.database.model.CustomerDBModel;
 import com.database.model.CustomerProductDBModel;
+import com.database.model.MapJobProblemModel;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
@@ -46,7 +48,7 @@ public class CreateJobAPIWithDBValidationTest {
 	public void setup() {
 		customer = new Customer("Praven", "R","8085536329", "", "praveen.raghu.raghu@gmail.com", "");
 		customerAddress = new CustomerAddress("980", "Peace", "Street1","Ganesh Mandir", "Limbodi","452020", "India", "M.P");
-		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"48992151778042", "48992151778042", "48992151778042", getTimeWithDaysAgo(10), 
+		customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"48992155578042", "48992155578042", "48992155578042", getTimeWithDaysAgo(10), 
 				Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
 		Problems problems = new Problems(Problem.SMARTPHONE_IS_RUNNING_SLOW.getCode(), "Battery Issue");
 		List<Problems> problemList = new ArrayList<Problems>();
@@ -90,6 +92,14 @@ Response response =	given()
 	    Assert.assertEquals(customerAddressFromDB.getPincode(), customerAddress.pincode());
 	    Assert.assertEquals(customerAddressFromDB.getCountry(), customerAddress.country());
 	    Assert.assertEquals(customerAddressFromDB.getState(), customerAddress.state());
+	    
+	    
+	    
+	    int tr_job_head_id= response.then().extract().body().jsonPath().getInt("data.tr_job_head_id");
+	    MapJobProblemModel jobDataFromDB = MapJobProblemDao.getProblemDetails(tr_job_head_id);
+	    
+	    Assert.assertEquals(jobDataFromDB.getMst_problem_id(), createJobPayload.problems().get(0).id());
+	    Assert.assertEquals(jobDataFromDB.getRemark(), createJobPayload.problems().get(0).remark());
 	    
 	    int productID= response.then().extract().body().jsonPath().getInt("data.tr_customer_product_id");
 	    CustomerProductDBModel customerProductDBData = CustomerProductDao.getProductInfoFromDB(productID);
