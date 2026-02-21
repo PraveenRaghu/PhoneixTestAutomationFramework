@@ -30,9 +30,11 @@ import com.api.response.model.CreateJobResponseModel;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
+import com.database.dao.JobHeadDao;
 import com.database.model.CustomerAddressDBModel;
 import com.database.model.CustomerDBModel;
 import com.database.model.CustomerProductDBModel;
+import com.database.model.JobHeadModel;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
@@ -47,7 +49,7 @@ public class CreateJobAPIWithDBValidationTest2 {
 	public void setup() {
 		customer = new Customer("Praven", "R","8085536329", "", "praveen.raghu.raghu@gmail.com", "");
 		customerAddress = new CustomerAddress("980", "Peace", "Street1","Ganesh Mandir", "Limbodi","452020", "India", "M.P");
-	customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"89999151778042", "89999151778042", "89999151778042", getTimeWithDaysAgo(10), 
+	customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"89999131778042", "89999131778042", "89999131778042", getTimeWithDaysAgo(10), 
 				Product.NEXUS_2.getCode(), Model.NEXUS_2_BLUE.getCode());
 		Problems problems = new Problems(Problem.SMARTPHONE_IS_RUNNING_SLOW.getCode(), "Battery Issue");
 		List<Problems> problemList = new ArrayList<Problems>();
@@ -101,6 +103,12 @@ CreateJobResponseModel createJobResponseModel =	given()
 	    Assert.assertEquals(customerProductDBData.getDop(), customerProduct.dop());
 	    Assert.assertEquals(customerProductDBData.getPopurl(), customerProduct.popurl());
 	    Assert.assertEquals(customerProductDBData.getSerial_number(), customerProduct.serial_number());
+	    
+	    JobHeadModel jobheadModelFromDB = JobHeadDao.getJobHeadData(customerID); 
+	    Assert.assertEquals(jobheadModelFromDB .getMst_oem_id(), createJobPayload.mst_oem_id());
+	    Assert.assertEquals(jobheadModelFromDB .getMst_service_location_id(), createJobPayload.mst_service_location_id());
+	    Assert.assertEquals(jobheadModelFromDB .getMst_platform_id(), createJobPayload.mst_platform_id());
+	    
 	    
 		
 	}
