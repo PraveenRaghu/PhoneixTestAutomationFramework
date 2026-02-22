@@ -5,13 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.api.utils.ConfigManager;
+import com.api.utils.EnvUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class DataBaseManager {
-	private static final String DB_URL = ConfigManager.getProperty("DB_URL");
-	private static final String DB_USER_NAME = ConfigManager.getProperty("DB_USER_NAME");
-	private static final String DB_PASSWORD = ConfigManager.getProperty("DB_PASSWORD");
+	private static final String DB_URL = EnvUtil.getValue("DB_URL");
+	private static final String DB_USER_NAME = EnvUtil.getValue("DB_USER_NAME");
+	private static final String DB_PASSWORD = EnvUtil.getValue("DB_PASSWORD");
 	private static HikariConfig hikariConfig;
 	private volatile static HikariDataSource hikariDataSource;
 	private static final int MAXIMUM_POOL_SIZE =Integer.parseInt(ConfigManager.getProperty("MAXIMUM_POOL_SIZE"));
