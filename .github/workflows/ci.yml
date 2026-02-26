@@ -31,6 +31,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Creating the .env file
+     run: |
+           echo "DB_URL={{ secerts.DB_URL }}" >> .env
+           echo "DB_USER_NAME={{ secerts.DB_USER_NAME }}" >> .env
+           echo "DB_PASSWORD={{ secerts.DB_PASSWORD }}" >> .env
+
 
     - name: Default value for execution
       id: default
