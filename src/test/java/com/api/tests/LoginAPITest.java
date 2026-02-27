@@ -1,6 +1,7 @@
 package com.api.tests;
 
-import static io.restassured.RestAssured.given;
+import static com.api.utils.SpecUtils.responseSpec_OK;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
@@ -9,29 +10,27 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.api.request.model.UserCredentials;
-import static com.api.utils.SpecUtils.*;
+import com.api.services.AuthServices;
 
-import static io.restassured.module.jsv.JsonSchemaValidator.*;
+import io.restassured.response.Response;
 
 public class LoginAPITest {
 	private UserCredentials userCredentials;
+	 private AuthServices authserivce;
 	
 	@BeforeMethod(description ="Create the payload for login api")
 	public void setup() {
 	 userCredentials = new UserCredentials("iamfd", "password");
+	 
+	 authserivce = new AuthServices();
+	 
+	
 	}
 	
 	@Test(description="Verifying if login api is working for FD user ", groups = {"api","regression","smoke"})
 	public void loginAPITest() throws IOException {
-		
-		
-		
-		
-		given()
-			.spec(requestSpec(userCredentials))
-			//.body(userCredentials)
-		.when()
-			.post("login")
+		authserivce.login(userCredentials)
+	   
 		.then()
 			.spec(responseSpec_OK())
 		.and()
