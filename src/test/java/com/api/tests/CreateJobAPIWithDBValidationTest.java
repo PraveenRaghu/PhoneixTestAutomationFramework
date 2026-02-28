@@ -26,6 +26,7 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
+import com.api.services.JobService;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
 import com.database.dao.CustomerProductDao;
@@ -43,6 +44,7 @@ public class CreateJobAPIWithDBValidationTest {
 	private Customer customer;
 	private CustomerAddress customerAddress;
 	private CustomerProduct customerProduct;
+	private JobService jobService ;
 	
 	@BeforeMethod(description="Creating createapi requestpayload")
 	public void setup() {
@@ -55,16 +57,15 @@ public class CreateJobAPIWithDBValidationTest {
 		problemList.add(problems);
 		
 		 createJobPayload = new CreateJobPayload(ServiceLocation.SERVICE_LOCATION_A.getCode(), Platform.FRONT_DESK.getCode(), Warranty_Status.IN_WARRANTY.getCode(), OEM.GOOGLE.getCode(), customer, customerAddress, customerProduct, problemList);
+		 jobService	= new JobService();
 	}
 	
 	
 	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "smoke"})
 	public void createJobAPITest() {
 		
-Response response =	given()
-		.spec(requestSpecWithAuth(Role.FD, createJobPayload))
-		.when()
-		.post("/job/create")
+Response response =	
+		jobService.createJOB(Role.FD, createJobPayload)
 		.then()
 		.spec(responseSpec_OK())
 		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/CreateAPIresponseSchema.json"))

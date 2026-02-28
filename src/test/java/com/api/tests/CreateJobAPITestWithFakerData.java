@@ -1,28 +1,16 @@
 package com.api.tests;
 
-import static io.restassured.RestAssured.given;
-
-import java.util.ArrayList;
-import java.util.List;
+import static com.api.utils.SpecUtils.responseSpec_OK;
 
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.api.constant.Model;
-import com.api.constant.OEM;
-import com.api.constant.Platform;
-import com.api.constant.Problem;
-import com.api.constant.Product;
 import com.api.constant.Role;
-import com.api.constant.ServiceLocation;
-import com.api.constant.Warranty_Status;
 import com.api.request.model.CreateJobPayload;
 import com.api.request.model.Customer;
-import com.api.request.model.CustomerAddress;
-import com.api.request.model.CustomerProduct;
-import com.api.request.model.Problems;
+import com.api.services.JobService;
 import com.api.utils.FakerDataGenerator;
 import com.database.dao.CustomerAddressDao;
 import com.database.dao.CustomerDao;
@@ -31,18 +19,16 @@ import com.database.model.CustomerAddressDBModel;
 import com.database.model.CustomerDBModel;
 import com.database.model.JobHeadModel;
 
-import static com.api.utils.DateTimeUtil.*;
-import static com.api.utils.SpecUtils.*;
-
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class CreateJobAPITestWithFakerData {
 	private CreateJobPayload createJobPayload;
+	private JobService jobService ;
 	
-	@BeforeMethod(description="Creating createapi requestpayload")
+	@BeforeMethod(description="Creating createapi requestpayload and intansiating JobService")
 	public void setup() {
 		
-		
+		jobService	= new JobService();
 		 createJobPayload = FakerDataGenerator.generateFakeCreateJobData();
 	}
 	
@@ -50,10 +36,7 @@ public class CreateJobAPITestWithFakerData {
 	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "smoke"})
 	public void createJobAPITest() {
 		
-		int customerID=given()
-		.spec(requestSpecWithAuth(Role.FD, createJobPayload))
-		.when()
-		.post("/job/create")
+		int customerID=jobService.createJOB(Role.FD, createJobPayload)
 		.then()
 		.spec(responseSpec_OK())
 		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/CreateAPIresponseSchema.json"))

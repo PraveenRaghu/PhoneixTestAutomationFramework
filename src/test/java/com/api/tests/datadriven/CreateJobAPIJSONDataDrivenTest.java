@@ -22,23 +22,27 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
+import com.api.services.JobService;
+
 import static com.api.utils.DateTimeUtil.*;
 import static com.api.utils.SpecUtils.*;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class CreateJobAPIJSONDataDrivenTest {
-
+private JobService jobService ;
+	
+	@BeforeMethod(description= " Intiating the Jobservice")
+	public void setup() {
+		jobService = new JobService();
+	}
 	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "datadriven","faker"},
 	      dataProviderClass =com.dataproviders.DataProviderUtils.class,
 	      dataProvider= "CreateAPIJSONDataprovider"
 			)
 	public void createJobAPITest(CreateJobPayload createJobPayload) {
 		
-		given()
-		.spec(requestSpecWithAuth(Role.FD, createJobPayload))
-		.when()
-		.post("/job/create")
+		jobService.createJOB(Role.FD, createJobPayload)
 		.then()
 		.spec(responseSpec_OK())
 		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/CreateAPIresponseSchema.json"))
