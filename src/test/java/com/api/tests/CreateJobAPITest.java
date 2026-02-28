@@ -1,6 +1,7 @@
 package com.api.tests;
 
-import static io.restassured.RestAssured.given;
+import static com.api.utils.DateTimeUtil.getTimeWithDaysAgo;
+import static com.api.utils.SpecUtils.responseSpec_OK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,17 @@ import com.api.request.model.Customer;
 import com.api.request.model.CustomerAddress;
 import com.api.request.model.CustomerProduct;
 import com.api.request.model.Problems;
-import static com.api.utils.DateTimeUtil.*;
-import static com.api.utils.SpecUtils.*;
+import com.api.services.JobService;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
 
 public class CreateJobAPITest {
 	private CreateJobPayload createJobPayload;
+	private JobService jobService ;
 	
 	@BeforeMethod(description="Creating createapi requestpayload")
 	public void setup() {
+		jobService	= new JobService();
 		Customer customer = new Customer("Praven", "R","8085536329", "", "praveen.raghu.raghu@gmail.com", "");
 		CustomerAddress customerAddress = new CustomerAddress("980", "Peace", "Street1","Ganesh Mandir", "Limbodi","452020", "India", "M.P");
 		CustomerProduct customerProduct = new CustomerProduct(getTimeWithDaysAgo(10),"69002151778042", "69002151778042", "69002151778042", getTimeWithDaysAgo(10), 
@@ -47,10 +49,7 @@ public class CreateJobAPITest {
 	@Test(description="Verifing create api for inwarranty flow", groups= {"api","regression", "smoke"})
 	public void createJobAPITest() {
 		
-		given()
-		.spec(requestSpecWithAuth(Role.FD, createJobPayload))
-		.when()
-		.post("/job/create")
+		jobService.createJOB(Role.FD, createJobPayload)
 		.then()
 		.spec(responseSpec_OK())
 		.body(JsonSchemaValidator.matchesJsonSchemaInClasspath("response-schema/CreateAPIresponseSchema.json"))

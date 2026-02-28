@@ -16,7 +16,7 @@ public class DashBoardService {
 	public Response  count(Role role) {
 		
 		return given()
-		.spec(requestSpecWithAuth(FD))
+		.spec(requestSpecWithAuth(role))
 		.when()
 		.get(COUNT_ENDPOINT);
 	}
