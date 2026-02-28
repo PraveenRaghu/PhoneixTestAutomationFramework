@@ -1,6 +1,5 @@
 package com.api.services;
 
-import static com.api.constant.Role.FD;
 import static com.api.utils.SpecUtils.requestSpec;
 import static com.api.utils.SpecUtils.requestSpecWithAuth;
 import static io.restassured.RestAssured.given;
@@ -12,6 +11,8 @@ import io.restassured.response.Response;
 public class DashBoardService {
 
 	private static final String COUNT_ENDPOINT = "/dashboard/count";
+	
+	private static final String DETAILS_ENDPOINT ="/dashboard/details";
 
 	public Response  count(Role role) {
 		
@@ -28,6 +29,14 @@ public class DashBoardService {
 		.when()
 		.get(COUNT_ENDPOINT);
 		
+	}
+	
+	public Response details(Role role, Object payload) {
+		return given()
+				.spec(requestSpecWithAuth(role))
+				.when()
+				.body(payload)
+				.post(DETAILS_ENDPOINT);
 	}
 
 }
