@@ -4,20 +4,29 @@ import static com.api.constant.Role.FD;
 import static io.restassured.RestAssured.given;
 
 import org.hamcrest.Matchers;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.api.services.DashBoardService;
+import com.api.services.UserService;
 
 import static com.api.utils.SpecUtils.*;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.*;
 
 public class CountAPITest {
+	
+	
+private DashBoardService dashBoardService;
+	
+	@BeforeMethod(description= " Intializing Dasboard service")
+	public void setup() {
+		dashBoardService = new DashBoardService();
+	}
 	@Test(description="Verifing Count api giving correct response", groups= {"api","regression", "smoke"})
 	public void verifyCountAPIResponse() {
 		
-		given()
-		.spec(requestSpecWithAuth(FD))
-		.when()
-		.get("/dashboard/count")
+		dashBoardService.count(FD)
 		.then()
 		.spec(responseSpec_OK())
 		.body("message",Matchers.equalTo("Success"))
@@ -30,10 +39,7 @@ public class CountAPITest {
 	}
 	@Test(description="Verifing count api giving correct response when token is missing", groups= {"api","regression", "smoke"})
 	public void verifyCountAPIMissingToken() {
-		given()
-		.spec(requestSpec())
-		.when()
-		.get("/dashboard/count")
+		dashBoardService.countWithNoAuth()
 		.then()
 		.spec(responseSpec_TEXT(401));
 		
