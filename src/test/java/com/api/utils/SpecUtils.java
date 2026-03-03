@@ -71,7 +71,7 @@ public class SpecUtils {
 		.log(LogDetail.URI)
 		.log(LogDetail.METHOD)
 		.log(LogDetail.HEADERS)
-		.log(LogDetail.BODY)
+		//.log(LogDetail.BODY)
 		.build();
 		return requestSpecification;
 		
@@ -80,7 +80,7 @@ public class SpecUtils {
 	
 	public static ResponseSpecification responseSpec_OK() {
 	ResponseSpecification	responseSpecification= new ResponseSpecBuilder()
-		.log(LogDetail.ALL)
+		//.log(LogDetail.ALL)
 		.expectStatusCode(200)
 		.expectResponseTime(Matchers.lessThan(1000L))
 		.build();
@@ -89,7 +89,7 @@ public class SpecUtils {
 	
 	public static ResponseSpecification responseSpec(int statusCode) {
 		ResponseSpecification	responseSpecification= new ResponseSpecBuilder()
-			.log(LogDetail.ALL)
+			//.log(LogDetail.ALL)
 			.expectStatusCode(200)
 			.expectResponseTime(Matchers.lessThan(1000L))
 			.build();
