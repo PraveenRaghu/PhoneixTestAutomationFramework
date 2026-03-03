@@ -8,12 +8,13 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 
 import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.api.constant.Role;
 import com.api.constant.Role.*;
 import com.api.services.MasterService;
-
+@Listeners(com.listeners.APITestListener.class)
 public class MasterAPITest {
 	
 private MasterService masterService;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.api.constant.Model;
@@ -28,7 +29,7 @@ import static com.api.utils.DateTimeUtil.*;
 import static com.api.utils.SpecUtils.*;
 
 import io.restassured.module.jsv.JsonSchemaValidator;
-
+@Listeners(com.listeners.APITestListener.class)
 public class CreateJobAPIDataDrivenTest {
 	
 	private JobService jobService ;

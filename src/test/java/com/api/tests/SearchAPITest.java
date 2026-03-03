@@ -1,6 +1,7 @@
 package com.api.tests;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.testng.annotations.Test;
 
@@ -8,7 +9,7 @@ import com.api.constant.Role;
 import com.api.request.model.SearchPayload;
 import com.api.services.JobService;
 import com.api.utils.SpecUtils;
-
+@Listeners(com.listeners.APITestListener.class)
 public class SearchAPITest {
 	
 	private JobService jobService;
